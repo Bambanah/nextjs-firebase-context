@@ -1,4 +1,4 @@
-import { Formik } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import { auth } from "../config/firebase";
 import { useRouter } from "next/router";
 
@@ -8,6 +8,7 @@ const Login = () => {
   return (
     <div>
       <h1>Login</h1>
+
       <Formik
         initialValues={{ email: "", password: "" }}
         validate={(values) => {
@@ -32,42 +33,18 @@ const Login = () => {
             });
         }}
       >
-        {({
-          values,
-          errors,
-          touched,
+        {({ isSubmitting }) => (
+          <Form>
+            <Field type="email" name="email" />
+            <ErrorMessage name="email" component="div" />
 
-          handleChange,
-          handleBlur,
-          handleSubmit,
-
-          isSubmitting,
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <input
-              type="email"
-              name="email"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.email}
-            />
-
-            {errors.email && touched.email && errors.email}
-
-            <input
-              type="password"
-              name="password"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.password}
-            />
-
-            {errors.password && touched.password && errors.password}
+            <Field type="password" name="password" />
+            <ErrorMessage name="password" component="div" />
 
             <button type="submit" disabled={isSubmitting}>
               Submit
             </button>
-          </form>
+          </Form>
         )}
       </Formik>
     </div>

@@ -4,8 +4,9 @@ import nookies from "nookies";
 import { firebaseAdmin } from "../config/firebaseAdmin";
 
 import { GetServerSidePropsContext } from "next";
+import { auth } from "../config/firebase";
 
-export default function Home({ uid, email }) {
+export default function Home({ email }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -14,6 +15,13 @@ export default function Home({ uid, email }) {
       </Head>
 
       <h1>Hello, {email}!</h1>
+      <a
+        onClick={() => {
+          auth.signOut();
+        }}
+      >
+        Log out
+      </a>
     </div>
   );
 }
@@ -24,12 +32,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
 
     // the user is authenticated!
-    const { uid, email } = token;
+    const { email } = token;
 
     // FETCH STUFF HERE!! 🚀
 
     return {
-      props: { uid: uid, email: email },
+      props: { email: email },
     };
   } catch (err) {
     // either the `token` cookie didn't exist
