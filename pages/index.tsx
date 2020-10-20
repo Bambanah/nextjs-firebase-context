@@ -1,12 +1,11 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import nookies from "nookies";
-import { auth } from "../config/firebase";
 import { firebaseAdmin } from "../config/firebaseAdmin";
 
 import { GetServerSidePropsContext } from "next";
 
-export default function Home() {
+export default function Home({ uid, email }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -14,7 +13,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1>Hello, {auth.currentUser}!</h1>
+      <h1>Hello, {email}!</h1>
     </div>
   );
 }
@@ -30,7 +29,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     // FETCH STUFF HERE!! 🚀
 
     return {
-      props: { message: `Your email is ${email} and your UID is ${uid}.` },
+      props: { uid: uid, email: email },
     };
   } catch (err) {
     // either the `token` cookie didn't exist
@@ -39,10 +38,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     ctx.res.writeHead(302, { Location: "/login" });
     ctx.res.end();
 
-    // `as never` prevents inference issues
-    // with InferGetServerSidePropsType.
-    // The props returned here don't matter because we've
-    // already redirected the user.
     return { props: {} as never };
   }
 };
