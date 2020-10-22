@@ -1,6 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { auth } from "../config/firebase";
 import { useRouter } from "next/router";
+import { login } from "../utils/auth";
 
 const Login = () => {
   const router = useRouter();
@@ -25,12 +25,9 @@ const Login = () => {
           return errors;
         }}
         onSubmit={(values) => {
-          auth
-            .signInWithEmailAndPassword(values.email, values.password)
-            .then((res) => {
-              console.log(res);
-              router.push("/");
-            });
+          login(values.email, values.password).then(() => {
+            router.push("/");
+          });
         }}
       >
         {({ isSubmitting }) => (
@@ -42,7 +39,7 @@ const Login = () => {
             <ErrorMessage name="password" component="div" />
 
             <button type="submit" disabled={isSubmitting}>
-              Submit
+              Login
             </button>
           </Form>
         )}
