@@ -5,3 +5,9 @@ export const login = async (email: string, password: string) => {
     return res;
   });
 };
+
+export const signup = async (email: string, password: string) => {
+  auth.createUserWithEmailAndPassword(email, password).then((res) => {
+    return res;
+  });
+};

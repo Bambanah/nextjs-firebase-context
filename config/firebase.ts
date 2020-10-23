@@ -22,5 +22,5 @@ const app = firebase.app();
 const database = firebase.database();
 const auth = firebase.auth();
 
-export { auth, database };
+export { firebase, auth, database };
 console.log(app.name ? "Firebase connected." : "Firebase not connected...");
