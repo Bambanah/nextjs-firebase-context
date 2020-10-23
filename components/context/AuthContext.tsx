@@ -1,30 +1,35 @@
 import { createContext, useState, useEffect, useContext } from "react";
-import { auth } from "../../config/firebase";
+import { firebase, auth } from "../../config/firebase";
 import nookies from "nookies";
 
-export const AuthContext = createContext({
+type ContextProps = {
+  user: firebase.User | null;
+  authenticated: boolean;
+  setUser: any;
+  loadingAuthState: boolean;
+};
+
+export const AuthContext = createContext<Partial<ContextProps>>({
   user: null,
 });
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<firebase.User | null>(null);
+  const [loadingAuthState, setLoadingAuthState] = useState(true);
 
   useEffect(() => {
-    return auth.onIdTokenChanged(async (user) => {
-      if (!user) {
-        setUser(null);
-        nookies.set(undefined, "token", "", "");
-        return;
-      }
-
-      const token = await user.getIdToken();
+    auth.onAuthStateChanged((user: any) => {
       setUser(user);
-      nookies.set(undefined, "token", token, "");
+      setLoadingAuthState(false);
     });
   });
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{ user, authenticated: user !== null, setUser, loadingAuthState }}
+    >
+      {children}
+    </AuthContext.Provider>
   );
 };
 
