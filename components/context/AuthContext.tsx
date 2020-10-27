@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { firebase, auth } from "../../config/firebase";
-import nookies from "nookies";
 
 type ContextProps = {
   user: firebase.User | null;
@@ -18,10 +17,18 @@ export const AuthProvider = ({ children }: any) => {
   const [loadingAuthState, setLoadingAuthState] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     auth.onAuthStateChanged((user: any) => {
-      setUser(user);
-      setLoadingAuthState(false);
+      if (isMounted) {
+        setUser(user);
+        setLoadingAuthState(false);
+      }
     });
+
+    return () => {
+      isMounted = false;
+    };
   });
 
   return (
