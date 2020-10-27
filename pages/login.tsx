@@ -1,12 +1,20 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { login } from "../utils/auth";
+
+import Link from "next/link";
+import Layout from "../components/context/Layout";
 
 const Login = () => {
   const router = useRouter();
 
   return (
-    <div>
+    <Layout>
+      <Head>
+        <title>Login</title>
+      </Head>
+
       <h1>Login</h1>
 
       <Formik
@@ -44,7 +52,11 @@ const Login = () => {
           </Form>
         )}
       </Formik>
-    </div>
+
+      <Link href="signup">
+        <a>Sign up</a>
+      </Link>
+    </Layout>
   );
 };
 
